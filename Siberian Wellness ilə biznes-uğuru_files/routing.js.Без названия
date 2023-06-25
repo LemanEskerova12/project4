@@ -1,0 +1,27 @@
+if (typeof assetsBase === 'undefined') {
+    assetsBase = '';
+}
+
+if (typeof locale === 'undefined') {
+    locale = null;
+}
+
+var createUrl = (function (assetsBase, locale) {
+    return function (route, params, absolute) {
+
+        if (!params) {
+            params = {};
+        }
+
+        if (locale && typeof params._locale === 'undefined') {
+            params._locale = locale;
+        }
+
+        try {
+            var url = Routing.generate(route, params, absolute);
+            return url.replace(assetsBase, '');
+        } catch (err) {
+            return '';
+        }
+    }
+})(assetsBase, locale);

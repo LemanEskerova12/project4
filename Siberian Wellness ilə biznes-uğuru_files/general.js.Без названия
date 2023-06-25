@@ -1,0 +1,67 @@
+$(document).ready(() => {
+    let $businessIntroHeight = $('.js-b-general-intro').outerHeight();
+
+    $.stellar.positionProperty.star = {
+        setPosition: function ($element, newLeft, originalLeft, newTop, originalTop) {
+            let $procent = ($(window).scrollTop() * 100) / ($businessIntroHeight - 400),
+                $opacity = parseFloat((1 - ( parseInt($procent, 10) / 100) ).toFixed(2));
+
+            if ($element.hasClass('js-star')) {
+                $element.css({
+                    'top': newTop,
+                    'right': (originalTop - newTop) * -1
+                });
+
+                if ($(window).scrollTop() >= $businessIntroHeight - 400) {
+                    $element.css({
+                        'opacity': 0
+                    });
+                } else if ($(window).scrollTop() >= $businessIntroHeight / 2 - 40) {
+                    $element.css({
+                        'opacity': $opacity + 0.08
+                    });
+                } else {
+                    $element.css({
+                        'opacity': 1
+                    });
+                }
+            } else {
+                $element.css({
+                    'transform': 'translate3d(' + 0 + 'px, ' + (newTop - originalTop) + 'px, ' + '0)'
+                });
+            }
+        }
+    };
+
+    // убираем parallax на маленьких экранах
+    const goodBlockItem = $('.js-b-general-advantage');
+    let destroyParallax = false;
+
+    const removeParallax = () => {
+        if (goodBlockItem && !destroyParallax) {
+            if(document.documentElement.clientWidth < 992) {
+                destroyParallax = true;
+
+                goodBlockItem.each(function () {
+                    $(this)
+                        .removeAttr('style')
+                        .removeAttr('data-stellar-ratio')
+                        .removeAttr('data-stellar-vertical-offset')
+                        .removeAttr('data-stellar-horizontal-offset');
+                });
+            }
+        }
+    }
+
+    removeParallax();
+
+    $(window).on('resize', removeParallax);
+
+    //Stellar Plugin
+    $("body").stellar({ //подключать
+        positionProperty: 'star',
+        responsive: true,
+        horizontalScrolling: false,
+        hideDistantElements: false
+    });
+});

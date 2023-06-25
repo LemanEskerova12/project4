@@ -1,0 +1,53 @@
+frontApp.controller('layoutCtrl',
+    ['$scope', 'geoService', 'modalService', 'modalsService', 'thankYouService', 'eCommerceService',
+
+    function ($scope, geoService, modalService, modalsService, thankYouService) {
+        // flag for Mobile Menu
+        $scope.menu = {
+            isOpened : false,
+            toggle() {
+                this.isOpened = !this.isOpened;
+
+                if (this.isOpened) {
+                    document.body.style.paddingRight = window.innerWidth - document.documentElement.clientWidth + "px";
+                    document.body.style.overflow = "hidden";
+                } else {
+                    document.body.style.paddingRight = 0;
+                    document.body.style.overflow = "visible";
+                }
+            }
+        };
+
+        $scope.dropdownMenu = {
+            toggle(e) {
+                e.preventDefault();
+
+                const target = e.currentTarget;
+
+                if (!target.classList.contains("b-menu__link_open-dropdown-menu"))
+                    target.classList.add("b-menu__link_open-dropdown-menu")
+                else
+                    target.classList.remove("b-menu__link_open-dropdown-menu")
+            }
+        }
+
+        $scope.modal = modalService;
+        $scope.modals = modalsService;
+        $scope.thankYou = thankYouService;
+
+        // path to imgs
+        $scope.imagesPath = IMAGES_PATH;
+        $scope.imagesPathOS = IMAGES_PATH_OS;
+        // Translate function
+        $scope.t = (text, params) => {
+
+            angular.forEach(params, function (param, key) {
+                if (typeof param == 'undefined')
+                    delete params[key];
+            });
+
+            return t(text, params);
+        };
+    }
+]);
+
